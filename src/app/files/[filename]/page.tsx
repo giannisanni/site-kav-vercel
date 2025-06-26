@@ -10,15 +10,20 @@ import { saveAs } from 'file-saver';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export default function File({ params }: { params: { filename: string } }) {
+export default function File({ params }: { params: Promise<{ filename: string }> }) {
   const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(null);
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber] = useState(1);
+  const [filename, setFilename] = useState<string>('');
 
   useEffect(() => {
     const fetchFile = async () => {
-      const res = await fetch(`/files/${params.filename}`);
-      const extension = params.filename.split('.').pop()?.toLowerCase();
+      const resolvedParams = await params;
+      const paramFilename = resolvedParams.filename;
+      setFilename(paramFilename);
+      
+      const res = await fetch(`/files/${paramFilename}`);
+      const extension = paramFilename.split('.').pop()?.toLowerCase();
 
       if (extension === 'pdf' || extension === 'xlsx' || extension === 'pptx' || extension === 'docx') {
         const arrayBuffer = await res.arrayBuffer();
@@ -30,7 +35,7 @@ export default function File({ params }: { params: { filename: string } }) {
     };
 
     fetchFile();
-  }, [params.filename]);
+  }, [params]);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -39,7 +44,7 @@ export default function File({ params }: { params: { filename: string } }) {
   const handleDownload = () => {
     if (fileContent) {
       const blob = new Blob([fileContent], { type: 'application/octet-stream' });
-      saveAs(blob, params.filename);
+      saveAs(blob, filename);
     }
   };
 
@@ -84,7 +89,7 @@ export default function File({ params }: { params: { filename: string } }) {
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="bg-white p-8 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">{params.filename}</h1>
+          <h1 className="text-2xl font-bold">{filename}</h1>
           <button
             onClick={handleDownload}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
