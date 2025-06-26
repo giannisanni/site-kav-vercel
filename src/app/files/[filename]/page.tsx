@@ -51,7 +51,7 @@ export default function File({ params }: { params: Promise<{ filename: string }>
   const renderFile = () => {
     if (!fileContent) return <div>Loading...</div>;
 
-    const extension = params.filename.split('.').pop()?.toLowerCase();
+    const extension = filename.split('.').pop()?.toLowerCase();
 
     if (extension === 'pdf') {
       return (
