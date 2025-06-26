@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import fs from "fs";
 import path from "path";
 
@@ -20,7 +21,7 @@ export default function Home() {
             rel="noopener noreferrer"
           >
             By{" "}
-            <img
+            <Image
               src="/vercel.svg"
               alt="Vercel Logo"
               className="dark:invert"

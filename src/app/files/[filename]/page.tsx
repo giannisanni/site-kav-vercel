@@ -13,7 +13,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 export default function File({ params }: { params: { filename: string } }) {
   const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(null);
   const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber] = useState(1);
 
   useEffect(() => {
     const fetchFile = async () => {
