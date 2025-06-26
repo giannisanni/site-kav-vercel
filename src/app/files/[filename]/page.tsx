@@ -81,7 +81,7 @@ export default function File({ params }: { params: Promise<{ filename: string }>
         .catch((err) => console.error('Error converting docx:', err));
       return <div id="docx-container" />;
     } else {
-      return <pre>{fileContent}</pre>;
+      return <pre>{typeof fileContent === 'string' ? fileContent : 'Binary file - download to view'}</pre>;
     }
   };
 
